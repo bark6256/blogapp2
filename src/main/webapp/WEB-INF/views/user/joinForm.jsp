@@ -4,15 +4,15 @@
 <%@ include file="../layout/header.jsp"%>
 
 <div class="container">
-	<form>
+	<form action="/join" method="post">
 		<div class="form-group">
-			<input type="text" class="form-control" placeholder="Enter username" maxlength="20">
+			<input type="text" name="username" class="form-control" placeholder="Enter username" maxlength="20">
 		</div>
 		<div class="form-group">
-			<input type="password" class="form-control" placeholder="Enter password" maxlength="20">
+			<input type="password" name="password" class="form-control" placeholder="Enter password" maxlength="20">
 		</div>
 		<div class="form-group">
-			<input type="email" class="form-control" placeholder="Enter email">
+			<input type="email" name="email" class="form-control" placeholder="Enter email">
 		</div>
 		<button type="submit" class="btn btn-primary">회원가입</button>
 	</form>
