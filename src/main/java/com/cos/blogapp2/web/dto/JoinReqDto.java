@@ -4,9 +4,11 @@ import com.cos.blogapp2.domain.user.User;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
 @AllArgsConstructor
 @Getter
+@Setter
 public class JoinReqDto {
 	private String username;
 	private String password;
