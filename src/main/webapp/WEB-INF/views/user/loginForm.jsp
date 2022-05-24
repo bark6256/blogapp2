@@ -4,12 +4,12 @@
 <%@ include file="../layout/header.jsp"%>
 
 <div class="container">
-	<form>
+	<form action="/login" method="post">
 		<div class="form-group">
-			<input type="text" class="form-control" placeholder="Enter username" maxlength="20">
+			<input type="text" name="username" class="form-control" placeholder="Enter username" maxlength="20">
 		</div>
 		<div class="form-group">
-			<input type="password" class="form-control" placeholder="Enter password" maxlength="20">
+			<input type="password" name="password" class="form-control" placeholder="Enter password" maxlength="20">
 		</div>
 		<button type="submit" class="btn btn-primary">로그인</button>
 	</form>
