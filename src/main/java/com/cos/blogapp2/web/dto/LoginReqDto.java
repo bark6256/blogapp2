@@ -1,5 +1,7 @@
 package com.cos.blogapp2.web.dto;
 
+import javax.validation.constraints.NotBlank;
+
 import com.cos.blogapp2.domain.user.User;
 
 import lombok.AllArgsConstructor;
@@ -12,7 +14,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class LoginReqDto {
+	@NotBlank
 	private String username;
+	@NotBlank
 	private String password;
 	
 	public User toEntity() {

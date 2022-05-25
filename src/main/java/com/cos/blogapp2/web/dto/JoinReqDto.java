@@ -1,5 +1,8 @@
 package com.cos.blogapp2.web.dto;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 import com.cos.blogapp2.domain.user.User;
 
 import lombok.AllArgsConstructor;
@@ -10,7 +13,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class JoinReqDto {
+	@NotBlank	// NotNull + NotEmpty
 	private String username;
+	@Size(min = 4)
+	@NotBlank
 	private String password;
 	private String email;
 	
