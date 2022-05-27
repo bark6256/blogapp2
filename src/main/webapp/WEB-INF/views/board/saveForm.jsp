@@ -4,12 +4,12 @@
 <%@ include file="../layout/header.jsp"%>
 
 <div class="container">
-	<form>
+	<form action="/board" method="post">
 		<div class="form-group">
-			<input type="text" class="form-control" placeholder="Enter title">
+			<input type="text" name="title" class="form-control" placeholder="Enter title">
 		</div>
 		<div class="form-group">
-			<textarea id="summernote" class="form-control" rows="5"></textarea>
+			<textarea id="summernote" name="content" class="form-control" rows="5"></textarea>
 		</div>
 		<button type="submit" class="btn btn-primary">글쓰기</button>
 	</form>
