@@ -1,7 +1,8 @@
 package com.cos.blogapp2.web;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,11 +31,14 @@ public class BoardController {
 	}
 	
 	@GetMapping("/board")
-	public String list(Model model) {
+	public String list(Model model, int page) {
+		page--;
+		PageRequest pageRequest = PageRequest.of(page, 3, Sort.by("id").descending());
 		
-		List<Board> boardsEntity = boardRepository.findAll();	// Entity = DB에서 가져온것
+		Page<Board> boardsEntity = boardRepository.findAll(pageRequest);	// Entity = DB에서 가져온것
 		model.addAttribute("boardsEntity", boardsEntity);
 		
+		System.out.println(boardsEntity);
 		return "board/list";
 	}
 	

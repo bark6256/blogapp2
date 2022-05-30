@@ -8,5 +8,5 @@
 
 <!-- 상대의 PC가 일한다. 부담을 넘길 수 있다. 이걸 쓰는게 좋다 -->
 <script>
-	location.href="/board";
+	location.href="/board?page=1";
 </script>
