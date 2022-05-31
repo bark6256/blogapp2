@@ -1,11 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ include file="../layout/header.jsp"%>
 
 <div class="container">
 
-	 	<c:forEach var="board" items="${boardsEntity.content}">
+	<c:forEach var="board" items="${boardsEntity.content}">
 		<!-- 카드 글 시작 -->
 		<div class="card">
 			<div class="card-body">
@@ -17,24 +17,37 @@
 		<!-- 카드 글 끝 -->
 	</c:forEach>
 
+
+	<fmt:parseNumber var="prev" value="${Math.floor(boardsEntity.number/10)*10}" integerOnly="true" />
+	<fmt:parseNumber var="next" value="${Math.floor(boardsEntity.number/10+1)*10+1}" integerOnly="true" />
+	<!-- 페이징 시작 -->
 	<div class="d-flex justify-content-center">
 		<ul class="pagination">
-			<c:choose>
-				<c:when test="${boardsEntity.first}">
-					<li class="page-item disabled"><a class="page-link">Prev</a></li>
-				</c:when>
-				<c:otherwise>
-					<li class="page-item"><a class="page-link" href="/board?page=${boardsEntity.number}">Prev</a></li>
-				</c:otherwise>
-			</c:choose>
-			<c:choose>
-				<c:when test="${boardsEntity.last}">
-					<li class="page-item disabled"><a class="page-link">Next</a></li>
-				</c:when>
-				<c:otherwise>
-					<li class="page-item"><a class="page-link" href="/board?page=${param.page + 1}">Next</a></li>
-				</c:otherwise>
-			</c:choose>
+			<!-- 이전 페이지 -->
+			<c:if test="${ !(1 > prev)}">
+				<li class="page-item"><a class="page-link" href="/board?page=1">First</a></li>
+				<li class="page-item"><a class="page-link" href="/board?page=${prev}">Prev</a></li>
+			</c:if>
+			
+			<!-- 숫자 페이지 -->
+			<c:forEach begin="${prev+1}" end="${next-1}" var="nPage">
+				<c:if test="${!(nPage > boardsEntity.totalPages)}">
+					<c:choose>
+						<c:when test="${nPage == (boardsEntity.number+1)}">
+							<li class="page-item active"><a class="page-link">${nPage}</a></li>
+						</c:when>
+						<c:otherwise>
+							<li class="page-item"><a class="page-link" href="/board?page=${nPage}">${nPage}</a></li>
+						</c:otherwise>
+					</c:choose>
+				</c:if>
+			</c:forEach>
+			
+			<!-- Next 페이지 -->
+			<c:if test="${!(boardsEntity.totalPages < next)}">
+				<li class="page-item"><a class="page-link" href="/board?page=${next}">Next</a></li>
+				<li class="page-item"><a class="page-link" href="/board?page=${boardsEntity.totalPages}">Last</a></li>
+			</c:if>
 		</ul>
 	</div>
 </div>

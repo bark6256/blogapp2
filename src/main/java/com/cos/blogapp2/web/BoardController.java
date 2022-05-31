@@ -33,7 +33,7 @@ public class BoardController {
 	@GetMapping("/board")
 	public String list(Model model, int page) {
 		page--;
-		PageRequest pageRequest = PageRequest.of(page, 3, Sort.by("id").descending());
+		PageRequest pageRequest = PageRequest.of(page, 5, Sort.by("id").descending());
 		
 		Page<Board> boardsEntity = boardRepository.findAll(pageRequest);	// Entity = DB에서 가져온것
 		model.addAttribute("boardsEntity", boardsEntity);
