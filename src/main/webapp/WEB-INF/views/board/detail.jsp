@@ -4,19 +4,21 @@
 <%@ include file="../layout/header.jsp"%>
 
 <div class="container">
-	<a href="#" class="btn btn-warning">수정</a>
-	<button class="btn btn-danger">삭제</button>
+	<c:if test="${boardEntity.user.username == sessionScope.username}">
+		<a href="#" class="btn btn-warning">수정</a>
+		<button class="btn btn-danger">삭제</button>
+	</c:if>
 	<br /><br />
 	<div>
-		<span>글 번호 : 1</span> 작성자 : <span><i>홍길동</i></span>
+		<span>글 번호 : ${boardEntity.id}</span> 작성자 : <span><i>${boardEntity.user.username}</i></span>
 	</div>
 	<br />
 	<div>
-		<h3>글 제목</h3>
+		<h3>${boardEntity.title}</h3>
 	</div>
 	<hr />
 	<div>
-		<div>글 내용</div>
+		<div>${boardEntity.content}</div>
 	</div>
 	<hr />
 
