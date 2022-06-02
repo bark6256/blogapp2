@@ -4,9 +4,9 @@
 <%@ include file="../layout/header.jsp"%>
 
 <div class="container">
-	<c:if test="${boardEntity.user.username == sessionScope.username}">
-		<a href="#" class="btn btn-warning">수정</a>
-		<button class="btn btn-danger">삭제</button>
+	<c:if test="${boardEntity.user.username == sessionScope.principal.username}">
+		<a href="/board/${boardEntity.id}/updateForm" class="btn btn-warning">수정</a>
+		<button id="btn-delete" class="btn btn-danger" type="button">삭제</button>
 	</c:if>
 	<br /><br />
 	<div>
