@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.cos.blogapp2.domain.board.Board;
 import com.cos.blogapp2.domain.board.BoardRepository;
 import com.cos.blogapp2.domain.user.User;
+import com.cos.blogapp2.handler.ex.MyNotFoundException;
 import com.cos.blogapp2.web.dto.BoardSaveReqDto;
 import com.cos.blogapp2.web.dto.CMRespDto;
 
@@ -33,7 +34,7 @@ public class BoardController {
 	public @ResponseBody CMRespDto<?> update(@PathVariable int id, @RequestBody BoardSaveReqDto dto) {	// @requestBody = 오브젝트(json)의 데이터를 받을때 사용
 		
 		Board board = dto.toEntity();
-		User principal = (User) session.getAttribute("prinsipal");
+		User principal = (User) session.getAttribute("principal");
 		board.setId(id);
 		board.setUser(principal);
 		boardRepository.save(board);
@@ -42,7 +43,8 @@ public class BoardController {
 	}
 	@GetMapping("/board/{id}/updateForm")
 	public String updateForm(@PathVariable int id, Model model) {
-		Board boardEntity = boardRepository.findById(id).get();
+		Board boardEntity = boardRepository.findById(id)
+				.orElseThrow(() -> new MyNotFoundException("게시글을 찾을수 없습니다.") );
 		model.addAttribute("boardEntity", boardEntity);
 		
 		return "board/updateForm";
@@ -74,7 +76,9 @@ public class BoardController {
 	@GetMapping("/board/{id}")
 	public String detail(@PathVariable int id, Model model) {
 		
-		Board boardEntity = boardRepository.findById(id).get();	// get() 옵셔널 안에 있는 걸 그대로 꺼내오는것. 없을경우의 오류를 잡지 못한다.
+	//	Board boardEntity = boardRepository.findById(id).get();	// get() 옵셔널 안에 있는 걸 그대로 꺼내오는것. 없을경우의 오류를 잡지 못한다.
+		Board boardEntity = boardRepository.findById(id)
+				.orElseThrow(() -> new MyNotFoundException("게시글을 찾을수 없습니다.") );
 		
 		model.addAttribute("boardEntity",boardEntity);
 		
