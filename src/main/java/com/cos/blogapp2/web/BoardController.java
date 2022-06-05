@@ -43,8 +43,12 @@ public class BoardController {
 	}
 	@GetMapping("/board/{id}/updateForm")
 	public String updateForm(@PathVariable int id, Model model) {
+		User principal = (User) session.getAttribute("principal");
+		
 		Board boardEntity = boardRepository.findById(id)
 				.orElseThrow(() -> new MyNotFoundException("게시글을 찾을수 없습니다.") );
+		if(principal.getId() != boardEntity.getUser().getId())
+			throw new MyNotFoundException("권한이 없습니다.");
 		model.addAttribute("boardEntity", boardEntity);
 		
 		return "board/updateForm";
