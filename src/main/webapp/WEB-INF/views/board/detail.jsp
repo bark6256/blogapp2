@@ -6,7 +6,7 @@
 <div class="container">
 	<c:if test="${boardEntity.user.username == sessionScope.principal.username}">
 		<a href="/board/${boardEntity.id}/updateForm" class="btn btn-warning">수정</a>
-		<button id="btn-delete" class="btn btn-danger" type="button">삭제</button>
+		<button id="btn-delete" class="btn btn-danger" type="button" onclick="deleteById(${boardEntity.id})">삭제</button>
 	</c:if>
 	<br /><br />
 	<div>
@@ -36,5 +36,23 @@
 	</div>
 	<br />
 </div>
+
+<script>
+	async function deleteById(id){
+	
+	let response = await fetch("/board/"+id,{
+		method: "delete"
+	});
+	
+	let parseResponse = await response.json();
+	
+	if(parseResponse.code == 1){
+		alert("업데이트 성공");
+		location.href = "/";
+	} else {
+		alert("업데이트 실패 - " + parseResponse.msg);
+	}
+}
+</script>
 
 <%@ include file="../layout/footer.jsp"%>

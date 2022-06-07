@@ -1,6 +1,7 @@
 package com.cos.blogapp2.web;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +29,7 @@ public class UserController {
 	}
 	
 	@PostMapping("/login")
-	public String login(LoginReqDto dto) {
+	public String login(@Valid LoginReqDto dto) {
 		
 		String encPassword = SHA.encrypt(dto.getPassword());	//해쉬로 변경하기
 		User principal = userRepository.findByUsernameAndPassword(dto.getUsername(), encPassword);
@@ -43,7 +44,7 @@ public class UserController {
 	}
 	
 	@PostMapping("/join")
-	public String join(JoinReqDto dto) {
+	public String join(@Valid JoinReqDto dto) {
 		
 		String encPassword = SHA.encrypt(dto.getPassword());	//해쉬로 변경하기
 		dto.setPassword(encPassword);

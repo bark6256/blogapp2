@@ -1,5 +1,7 @@
 package com.cos.blogapp2.web.dto;
 
+import javax.validation.constraints.NotBlank;
+
 import com.cos.blogapp2.domain.board.Board;
 
 import lombok.AllArgsConstructor;
@@ -10,6 +12,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class BoardSaveReqDto {
+	@NotBlank
 	private String title;
 	private String content;
 	

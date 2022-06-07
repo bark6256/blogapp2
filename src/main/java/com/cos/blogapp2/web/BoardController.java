@@ -1,12 +1,14 @@
 package com.cos.blogapp2.web;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,8 +32,22 @@ public class BoardController {
 	private final BoardRepository boardRepository;
 	private final HttpSession session;
 	
+	@DeleteMapping("/board/{id}")
+	public @ResponseBody CMRespDto<?> delete(@PathVariable int id) {
+
+		User principal = (User) session.getAttribute("principal");
+		Board boardEntity = boardRepository.findById(id)
+				.orElseThrow(() -> new MyNotFoundException("게시글을 찾을수 없습니다.") );
+		
+		if(boardEntity.getUser().getId() == principal.getId()) {
+			boardRepository.deleteById(boardEntity.getId());
+			return new CMRespDto<>(1, "삭제 완료", null);
+		} else
+			return new CMRespDto<>(-1, "삭제 실패", null);
+	}
+	
 	@PutMapping("/board/{id}")
-	public @ResponseBody CMRespDto<?> update(@PathVariable int id, @RequestBody BoardSaveReqDto dto) {	// @requestBody = 오브젝트(json)의 데이터를 받을때 사용
+	public @ResponseBody CMRespDto<?> update(@PathVariable int id,@Valid @RequestBody BoardSaveReqDto dto) {	// @requestBody = 오브젝트(json)의 데이터를 받을때 사용
 		
 		Board board = dto.toEntity();
 		User principal = (User) session.getAttribute("principal");
