@@ -15,7 +15,7 @@ import lombok.Setter;
 public class JoinReqDto {
 	@NotBlank	// NotNull + NotEmpty
 	private String username;
-	@Size(min = 4)
+	@Size(min = 4, max = 30)
 	@NotBlank
 	private String password;
 	private String email;
