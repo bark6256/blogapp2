@@ -2,7 +2,7 @@ package com.cos.blogapp2.handler.ex;
 
 /**
  * 
- * @author 게시글을 못찾았을때 사용. 에러 페이지로 이동
+ * @author 권한등이 없어 페이지 이동 실패. index페이지로 이동
  *
  */
 

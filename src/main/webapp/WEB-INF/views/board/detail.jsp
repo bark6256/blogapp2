@@ -26,10 +26,10 @@
 		<!-- 댓글 시작 -->
 		<form>
 			<div class="card-body">
-				<textarea id="reply-content" class="form-control" rows="1" id="ta-content"></textarea>
+				<textarea name="content" id="content" class="form-control" rows="1" id="ta-content"></textarea>
 			</div>
 			<div class="card-footer">
-				<button type="submit" id="btn-reply-save" class="btn btn-primary">등록</button>
+				<button type="button" id="btn-reply-save" class="btn btn-primary" onclick="commentSave(${boardEntity.id})">등록</button>
 			</div>
 		</form>
 		<!-- 댓글 끝 -->
@@ -38,21 +38,46 @@
 </div>
 
 <script>
+	// 게시글 삭제
 	async function deleteById(id){
 	
-	let response = await fetch("/board/"+id,{
-		method: "delete"
-	});
-	
-	let parseResponse = await response.json();
-	
-	if(parseResponse.code == 1){
-		alert("업데이트 성공");
-		location.href = "/";
-	} else {
-		alert("업데이트 실패 - " + parseResponse.msg);
+		let response = await fetch("/board/"+id,{
+			method: "delete"
+		});
+		
+		let parseResponse = await response.json();
+		
+		if(parseResponse.code == 1){
+			alert("업데이트 성공");
+			location.href = "/";
+		} else {
+			alert("업데이트 실패 - " + parseResponse.msg);
+		}
 	}
-}
+	
+	// 댓글 작성
+	async function commentSave(id){
+		let commentSaveDto = {
+				content : document.querySelector("#content").value
+		};
+		
+		let response = await fetch("/board/"+id+"/comment",{
+			method: "post",
+			body: JSON.stringify(commentSaveDto),
+			headers: {
+				"Content-Type":"application/json; charset=utf-8"
+			}
+		});
+		
+		let parseResponse = await response.json();
+		
+		if(parseResponse.code == 1){
+			alert("업데이트 성공");
+			location.href = "/board/" + id;
+		} else {
+			alert("업데이트 실패 - " + parseResponse.msg);
+		}
+	}
 </script>
 
 <%@ include file="../layout/footer.jsp"%>

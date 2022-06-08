@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cos.blogapp2.domain.user.User;
 import com.cos.blogapp2.domain.user.UserRepository;
+import com.cos.blogapp2.handler.ex.MyNotFoundException;
 import com.cos.blogapp2.util.SHA;
 import com.cos.blogapp2.util.Script;
 import com.cos.blogapp2.web.dto.JoinReqDto;
@@ -46,14 +47,7 @@ public class UserController {
 				System.out.println("필드 : " + error.getField());
 				System.out.println("메시지 : " + error.getDefaultMessage());
 			}
-			switch (field) {
-			case "username":
-				return Script.back("아이디는 " + message);
-			case "password":
-				return Script.back("비밀번호는 " + message);
-			default:
-			}
-			return Script.back(field + "는 " + message);
+			throw new MyNotFoundException(message);
 		}
 		String encPassword = SHA.encrypt(dto.getPassword()); // 해쉬로 변경하기
 		User principal = userRepository.findByUsernameAndPassword(dto.getUsername(), encPassword);
