@@ -28,7 +28,6 @@ import com.cos.blogapp2.domain.comment.CommentRepository;
 import com.cos.blogapp2.domain.user.User;
 import com.cos.blogapp2.handler.ex.MyAsyncNotFoundException;
 import com.cos.blogapp2.handler.ex.MyNotFoundException;
-import com.cos.blogapp2.util.Script;
 import com.cos.blogapp2.web.dto.BoardSaveReqDto;
 import com.cos.blogapp2.web.dto.CMRespDto;
 import com.cos.blogapp2.web.dto.CommentSaveReqDto;
@@ -145,6 +144,7 @@ public class BoardController {
 				.orElseThrow(() -> new MyNotFoundException("게시글을 찾을수 없습니다.") );
 		
 		model.addAttribute("boardEntity",boardEntity);
+		
 		
 		return "board/detail";
 	}

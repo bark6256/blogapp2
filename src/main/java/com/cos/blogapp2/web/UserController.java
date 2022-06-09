@@ -40,14 +40,12 @@ public class UserController {
 	public @ResponseBody String login(@Valid LoginReqDto dto, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			Map<String, String> errorMap = new HashMap<>();
-			String field = bindingResult.getFieldError().getField();
-			String message = bindingResult.getFieldError().getDefaultMessage();
 			for (FieldError error : bindingResult.getFieldErrors()) {
 				errorMap.put(error.getField(), error.getDefaultMessage());
 				System.out.println("필드 : " + error.getField());
 				System.out.println("메시지 : " + error.getDefaultMessage());
 			}
-			throw new MyNotFoundException(message);
+			throw new MyNotFoundException(errorMap.toString());
 		}
 		String encPassword = SHA.encrypt(dto.getPassword()); // 해쉬로 변경하기
 		User principal = userRepository.findByUsernameAndPassword(dto.getUsername(), encPassword);
