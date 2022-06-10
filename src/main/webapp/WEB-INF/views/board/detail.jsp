@@ -47,7 +47,6 @@
 		let parseResponse = await response.json();
 		
 		if(parseResponse.code == 1){
-			alert("업데이트 성공");
 			location.href = "/";
 		} else {
 			alert("업데이트 실패 - " + parseResponse.msg);
@@ -71,7 +70,6 @@
 		let parseResponse = await response.json();
 		
 		if(parseResponse.code == 1){
-			alert("업데이트 성공");
 			location.href = "/board/" + id;
 		} else {
 			alert("업데이트 실패 - " + parseResponse.msg);
@@ -89,12 +87,31 @@
 					<div>${comment.content}</div>
 					<div class="d-flex">
 						<div class="font-italic">작성자 : ${comment.user.username} &nbsp;</div>
-						<button class="badge" id="reply">삭제</button>
+						<button class="badge" id="reply" onclick="commentDelete(${comment.id})">삭제</button>
 					</div>
 				</li>
 			</c:forEach>
 		</ul>
 	</div>
+	
+	<script>
+	// 댓글 삭제
+	async function commentDelete(commentId){
+		
+		let response = await fetch("/comment/" + commentId,{
+			method: "delete"
+		});
+		
+		let parseResponse = await response.json();
+		
+		if(parseResponse.code == 1){
+			alert("댓글 삭제 성공");
+			$("#reply-" + commentId).remove();
+		} else {
+			alert("업데이트 실패 - " + parseResponse.msg);
+		}
+	}
+	</script>
 </div>
 	
 <%@ include file="../layout/footer.jsp"%>
