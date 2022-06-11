@@ -145,7 +145,6 @@ public class BoardController {
 		
 		model.addAttribute("boardEntity",boardEntity);
 		
-		
 		return "board/detail";
 	}
 	

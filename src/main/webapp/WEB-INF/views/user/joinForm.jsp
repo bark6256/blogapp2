@@ -4,6 +4,7 @@
 <%@ include file="../layout/header.jsp"%>
 
 <div class="container">
+	<h1>회원가입</h1><br>
 	<form action="/join" method="post">
 		<div class="form-group">
 			<input type="text" name="username" class="form-control" placeholder="Enter username" maxlength="20">

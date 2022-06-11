@@ -4,6 +4,7 @@
 <%@ include file="../layout/header.jsp"%>
 
 <div class="container">
+	<h1>로그인</h1><br>
 	<form action="/login" method="post">
 		<div class="form-group">
 			<input type="text" name="username" class="form-control" placeholder="Enter username" maxlength="20">

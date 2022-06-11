@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Builder
 @NoArgsConstructor
@@ -17,6 +18,7 @@ import lombok.NoArgsConstructor;
 // @Setter	값을 변경할때 사용. DB의 값과 완벽하게 동기화가 되어야 하기 때문에 실무에서는 모델에 setter를 안쓴다. -> builder패턴
 @Getter
 @Entity	// 이게 있어야 테이블이 만들어진다
+@Setter
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)	// 전략 만들기
