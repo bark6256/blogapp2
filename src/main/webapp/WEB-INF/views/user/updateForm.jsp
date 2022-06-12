@@ -29,7 +29,7 @@
 				email : document.querySelector("#email").value
 		};
 		
-		let response = await fetch("/user/"+id,{
+		let response = await fetch("/api/user/"+id,{
 			method: "put",
 			body: JSON.stringify(userUpdateDto),
 			headers: {

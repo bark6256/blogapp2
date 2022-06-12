@@ -35,7 +35,7 @@ public class UserController {
 	private final UserRepository userRepository;
 	private final HttpSession session;
 
-	@PutMapping("/user/{id}")
+	@PutMapping("/api/user/{id}")
 	public @ResponseBody CMRespDto<?> userUpdate(@PathVariable int id, @Valid @RequestBody UserUpdateReqDto dto, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			Map<String, String> errorMap = new HashMap<>();
@@ -46,20 +46,17 @@ public class UserController {
 			}
 			throw new MyAsyncNotFoundException(errorMap.toString());
 		}
-		String encPassword = SHA.encrypt(dto.getPassword()); // 해쉬로 변경하기
-		User user = userRepository.findByUsernameAndPassword(dto.getUsername(), encPassword);
-		System.out.println("user");
-		System.out.println(user.getPassword());
+		String encPassword = SHA.encrypt(dto.getPassword()); // 입력 받은 기존 비밀번호 해쉬로 변경하기
+		User user = userRepository.findByUsernameAndPassword(dto.getUsername(), encPassword); // 입력받은 현재 비밀번호에 맞는 유저 정보 가져오기
 		User principal = (User) session.getAttribute("principal");
-		System.out.println("principal");
-		System.out.println(principal.getPassword());
-		if (user.getUsername().equals(principal.getUsername())
-				&& user.getPassword().equals(principal.getPassword())) {
-			String ecnNewPassword = SHA.encrypt(dto.getNewpassword());
-			user.setPassword(ecnNewPassword);
-			userRepository.save(user);
-			principal.setPassword(ecnNewPassword);
-			session.setAttribute("principal", principal);
+		if (user.getUsername().equals(principal.getUsername()) && user.getPassword().equals(principal.getPassword())) {
+			
+			String ecnNewPassword = SHA.encrypt(dto.getNewpassword()); // 새 비밀번호 해쉬화
+			user.setPassword(ecnNewPassword); // 새 비밀번호로 오브젝트에 저장
+			userRepository.save(user); // 비밀번호 변경
+			
+			principal.setPassword(ecnNewPassword); // 로그인된 유저의 저장된 비밀번호 변경
+			session.setAttribute("principal", principal); // 새션의 비밀번호 변경
 			return new CMRespDto<>(1, "변경 완료", null);
 		} else {
 			throw new MyAsyncNotFoundException("현재 비밀번호가 맞지않습니다.");
@@ -133,7 +130,7 @@ public class UserController {
 		return "user/joinForm";
 	}
 
-	@GetMapping("/user/{id}")
+	@GetMapping("/api/user/{id}")
 	public String userInfo(@PathVariable int id) {
 		return "user/updateForm";
 	}

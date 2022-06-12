@@ -43,12 +43,9 @@ public class BoardController {
 	private final HttpSession session;
 	
 	
-	@PostMapping("/board/{boardId}/comment")
+	@PostMapping("/api/board/{boardId}/comment")
 	public @ResponseBody CMRespDto<?> commentSave(@PathVariable int boardId,@Valid @RequestBody CommentSaveReqDto dto, BindingResult bindingResult) {
 		User principal = (User) session.getAttribute("principal");
-		if (principal == null) { // 로그인 안됨
-			return new CMRespDto<>(-1, "권한이 없습니다.", null);
-		}
 		Board boardEntity = boardRepository.findById(boardId)
 				.orElseThrow(() -> new MyNotFoundException("게시글을 찾을수 없습니다.") );
 		// 값 검사
@@ -73,7 +70,7 @@ public class BoardController {
 		return new CMRespDto<>(1, "댓글 작성 성공", null);
 	}
 	
-	@DeleteMapping("/board/{id}")
+	@DeleteMapping("/api/board/{id}")
 	public @ResponseBody CMRespDto<?> delete(@PathVariable int id) {
 		User principal = (User) session.getAttribute("principal");
 		Board boardEntity = boardRepository.findById(id)
@@ -86,12 +83,9 @@ public class BoardController {
 			throw new MyAsyncNotFoundException("권한이 없습니다.");
 	}
 	
-	@PutMapping("/board/{id}")
+	@PutMapping("/api/board/{id}")
 	public @ResponseBody CMRespDto<?> update(@PathVariable int id,@Valid @RequestBody BoardSaveReqDto dto, BindingResult bindingResult) {	// @requestBody = 오브젝트(json)의 데이터를 받을때 사용
 		User principal = (User) session.getAttribute("principal");
-		if (principal == null) { // 로그인 안됨
-			throw new MyAsyncNotFoundException("로그인이 필요합니다.");
-		}
 		Board board = dto.toEntity();
 		board.setId(id);
 		board.setUser(principal);
@@ -99,7 +93,7 @@ public class BoardController {
 		
 		return new CMRespDto<>(1, "수정 완료", null);
 	}
-	@GetMapping("/board/{id}/updateForm")
+	@GetMapping("/api/board/{id}/updateForm")
 	public String updateForm(@PathVariable int id, Model model) {
 		User principal = (User) session.getAttribute("principal");
 		
@@ -112,12 +106,9 @@ public class BoardController {
 		return "board/updateForm";
 	}
 	
-	@PostMapping("/board")
+	@PostMapping("/api/board")
 	public String save(BoardSaveReqDto dto) {	// title, content
 		User principal = (User) session.getAttribute("principal");
-		if (principal == null) { // 로그인 안됨
-			throw new MyNotFoundException("로그인이 필요합니다.");
-		}
 		Board board = dto.toEntity();
 		board.setUser(principal);
 		boardRepository.save(board);
@@ -148,7 +139,7 @@ public class BoardController {
 		return "board/detail";
 	}
 	
-	@GetMapping("/board/saveForm")
+	@GetMapping("/api/board/saveForm")
 	public String boardSaveForm() {
 		
 		return "board/saveForm";

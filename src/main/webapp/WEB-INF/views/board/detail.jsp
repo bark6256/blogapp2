@@ -5,7 +5,7 @@
 
 <div class="container">
 	<c:if test="${boardEntity.user.username == sessionScope.principal.username}">
-		<a href="/board/${boardEntity.id}/updateForm" class="btn btn-warning">수정</a>
+		<a href="/api/board/${boardEntity.id}/updateForm" class="btn btn-warning">수정</a>
 		<button id="btn-delete" class="btn btn-danger" type="button" onclick="deleteById(${boardEntity.id})">삭제</button>
 	</c:if>
 	<br /><br />
@@ -40,7 +40,7 @@
 	// 게시글 삭제
 	async function deleteById(id){
 	
-		let response = await fetch("/board/"+id,{
+		let response = await fetch("/api/board/"+id,{
 			method: "delete"
 		});
 		
@@ -59,7 +59,7 @@
 				content : document.querySelector("#content").value
 		};
 		
-		let response = await fetch("/board/"+id+"/comment",{
+		let response = await fetch("/api/board/"+id+"/comment",{
 			method: "post",
 			body: JSON.stringify(commentSaveDto),
 			headers: {
@@ -98,7 +98,7 @@
 	// 댓글 삭제
 	async function commentDelete(commentId){
 		
-		let response = await fetch("/comment/" + commentId,{
+		let response = await fetch("/api/comment/" + commentId,{
 			method: "delete"
 		});
 		

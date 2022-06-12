@@ -21,11 +21,9 @@ public class CommentController {
 	private final CommentRepository commentRepository;
 	private final HttpSession session;
 	
-	@DeleteMapping("/comment/{id}")
+	@DeleteMapping("/api/comment/{id}")
 	public @ResponseBody CMRespDto<?> commentDelete(@PathVariable int id) {
 		User principal = (User) session.getAttribute("principal");
-		if(principal == null)
-			throw new MyAsyncNotFoundException("로그인이 필요합니다.");
 		
 		Comment commentEntity = commentRepository.findById(id)
 				.orElseThrow(() -> new MyAsyncNotFoundException("댓글을 찾지 못했습니다."));

@@ -22,7 +22,7 @@
 				content : document.querySelector("#content").value
 		};
 		
-		let response = await fetch("/board/"+id,{
+		let response = await fetch("/api/board/"+id,{
 			method: "put",
 			body: JSON.stringify(boardUpdateDto),
 			headers: {
