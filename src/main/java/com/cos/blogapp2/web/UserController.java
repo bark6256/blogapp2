@@ -17,10 +17,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cos.blogapp2.domain.user.User;
-import com.cos.blogapp2.domain.user.UserRepository;
 import com.cos.blogapp2.handler.ex.MyAsyncNotFoundException;
 import com.cos.blogapp2.handler.ex.MyNotFoundException;
-import com.cos.blogapp2.util.SHA;
+import com.cos.blogapp2.service.UserService;
 import com.cos.blogapp2.util.Script;
 import com.cos.blogapp2.web.dto.CMRespDto;
 import com.cos.blogapp2.web.dto.JoinReqDto;
@@ -32,8 +31,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Controller
 public class UserController {
-	private final UserRepository userRepository;
 	private final HttpSession session;
+	private final UserService userService;
 
 	@PutMapping("/api/user/{id}")
 	public @ResponseBody CMRespDto<?> userUpdate(@PathVariable int id, @Valid @RequestBody UserUpdateReqDto dto, BindingResult bindingResult) {
@@ -46,21 +45,15 @@ public class UserController {
 			}
 			throw new MyAsyncNotFoundException(errorMap.toString());
 		}
-		String encPassword = SHA.encrypt(dto.getPassword()); // 입력 받은 기존 비밀번호 해쉬로 변경하기
-		User user = userRepository.findByUsernameAndPassword(dto.getUsername(), encPassword); // 입력받은 현재 비밀번호에 맞는 유저 정보 가져오기
+		
 		User principal = (User) session.getAttribute("principal");
-		if (user.getUsername().equals(principal.getUsername()) && user.getPassword().equals(principal.getPassword())) {
-			
-			String ecnNewPassword = SHA.encrypt(dto.getNewpassword()); // 새 비밀번호 해쉬화
-			user.setPassword(ecnNewPassword); // 새 비밀번호로 오브젝트에 저장
-			userRepository.save(user); // 비밀번호 변경
-			
-			principal.setPassword(ecnNewPassword); // 로그인된 유저의 저장된 비밀번호 변경
-			session.setAttribute("principal", principal); // 새션의 비밀번호 변경
-			return new CMRespDto<>(1, "변경 완료", null);
-		} else {
-			throw new MyAsyncNotFoundException("현재 비밀번호가 맞지않습니다.");
+		// 권한
+		if (principal.getId() != id) {
+			throw new MyAsyncNotFoundException("회원정보를 수정할 권한이 없습니다.");
 		}
+		
+		userService.정보수정(dto,principal);
+		return new CMRespDto<>(1, "변경 완료", null);
 	}
 	
 	@GetMapping("/logout")
@@ -80,43 +73,28 @@ public class UserController {
 			}
 			throw new MyNotFoundException(errorMap.toString());
 		}
-		String encPassword = SHA.encrypt(dto.getPassword()); // 해쉬로 변경하기
-		User principal = userRepository.findByUsernameAndPassword(dto.getUsername(), encPassword);
-
-		if (principal == null) { // 로그인 실패
+		
+		User principal = userService.로그인(dto);
+		if (principal == null) 
 			return Script.back("아이디 또는 비밀번호가 맞지않습니다.");
-		} else { // 로그인 성공
-			// 세션 날라가는 조건 : 1.session.invalidate() 2. 브라우저 닫기
-			session.setAttribute("principal", principal); // principal : 인증된 사용자.
-			return Script.href("/", "로그인 성공");
-		}
+		
+		session.setAttribute("principal", principal);
+		return Script.href("/", "로그인 성공");
 	}
 
 	@PostMapping("/join")
 	public @ResponseBody String join(@Valid JoinReqDto dto, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			Map<String, String> errorMap = new HashMap<>();
-			String field = bindingResult.getFieldError().getField();
-			String message = bindingResult.getFieldError().getDefaultMessage();
 			for (FieldError error : bindingResult.getFieldErrors()) {
 				errorMap.put(error.getField(), error.getDefaultMessage());
 				System.out.println("필드 : " + error.getField());
 				System.out.println("메시지 : " + error.getDefaultMessage());
 			}
-			switch (field) {
-			case "username":
-				return Script.back("아이디는 " + message);
-			case "password":
-				return Script.back("비밀번호는 " + message);
-			default:
-			}
-			return Script.back(field + "는 " + message);
+			throw new MyNotFoundException(errorMap.toString());
 		}
-		String encPassword = SHA.encrypt(dto.getPassword()); // 해쉬로 변경하기
-		dto.setPassword(encPassword);
-		User user = dto.toEntity();
-		userRepository.save(user);
-
+		
+		userService.회원가입(dto);
 		return Script.href("/loginForm", "회원가입 성공");
 	}
 

@@ -3,8 +3,6 @@ package com.cos.blogapp2.web.dto;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-import com.cos.blogapp2.domain.user.User;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,14 +19,4 @@ public class UserUpdateReqDto {
 	@NotBlank
 	private String newpassword;
 	private String email;
-	
-	public User toEntity() {
-		User user = User.builder()
-				.username(username)
-				.password(newpassword)
-				.email(email)
-				.build();
-		return user;
-	}
-
 }
