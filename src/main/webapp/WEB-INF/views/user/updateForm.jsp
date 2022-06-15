@@ -12,7 +12,7 @@
 			<input type="password" id="password" class="form-control" placeholder="Enter password" maxlength="20">
 		</div>
 		<div class="form-group">
-			<input type="password" id="newpassword" class="form-control" placeholder="Enter password" maxlength="20">
+			<input type="password" id="newpassword" class="form-control" placeholder="Enter New password" maxlength="20">
 		</div>
 		<div class="form-group">
 			<input type="email" id="email" value="${sessionScope.principal.email}" name="email" class="form-control" placeholder="Enter email">

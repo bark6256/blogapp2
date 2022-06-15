@@ -42,7 +42,9 @@ public class BoardController {
 	private final HttpSession session;
 	
 	@PostMapping("/api/board/{boardId}/comment")
-	public @ResponseBody CMRespDto<?> commentSave(@PathVariable int boardId,@Valid @RequestBody CommentSaveReqDto dto, BindingResult bindingResult) {
+	public @ResponseBody CMRespDto<?> commentSave(@PathVariable int boardId,
+			@Valid @RequestBody CommentSaveReqDto dto, BindingResult bindingResult) {
+		
 		User principal = (User) session.getAttribute("principal");
 		// 값 검사
 		if (bindingResult.hasErrors()) {
@@ -70,7 +72,20 @@ public class BoardController {
 	}
 	
 	@PutMapping("/api/board/{id}")
-	public @ResponseBody CMRespDto<?> update(@PathVariable int id,@Valid @RequestBody BoardSaveReqDto dto, BindingResult bindingResult) {	// @requestBody = 오브젝트(json)의 데이터를 받을때 사용
+	public @ResponseBody CMRespDto<?> update(@PathVariable int id,
+			@Valid @RequestBody BoardSaveReqDto dto, BindingResult bindingResult) {
+		
+		if (bindingResult.hasErrors()) {
+			Map<String, String> errorMap = new HashMap<>();
+			for (FieldError error : bindingResult.getFieldErrors()) {
+				errorMap.put(error.getField(), error.getDefaultMessage());
+				System.out.println("필드 : " + error.getField());
+				System.out.println("메시지 : " + error.getDefaultMessage());
+				System.out.println();
+			}
+			throw new MyAsyncNotFoundException(errorMap.toString());
+		}
+		
 		User principal = (User) session.getAttribute("principal");
 		boardService.게시글수정(id, dto, principal);
 		

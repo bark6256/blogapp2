@@ -87,7 +87,9 @@
 					<div>${comment.content}</div>
 					<div class="d-flex">
 						<div class="font-italic">작성자 : ${comment.user.username} &nbsp;</div>
-						<button class="badge" id="reply" onclick="commentDelete(${comment.id})">삭제</button>
+						<c:if test="${principal.id eq comment.user.id}">
+							<button class="badge" id="reply" onclick="commentDelete(${comment.id})">삭제</button>
+						</c:if>
 					</div>
 				</li>
 			</c:forEach>
